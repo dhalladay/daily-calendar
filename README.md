@@ -16,6 +16,8 @@ It is easy to get distracted and to forget all of the many things that must be d
 - jQuery
 - bootstrap
 - font Awesome
+- Google fonts
+- jQueryUi
 
 ## Website
 
