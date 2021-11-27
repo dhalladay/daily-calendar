@@ -1,7 +1,13 @@
 //create date variable
 var dateDisplay = moment(new Date());
+var savedDate = dateDisplay.format("MM/DD/YYYY");
 var hour = Number(dateDisplay.format("H"));
-var tasks = {};
+var schedule = {};
+
+console.log(savedDate);
+console.log(savedDate === "11/26/2021");
+console.log(typeof savedDate);
+console.log(typeof 11/26/2021);
 
 //insert date function
 var insertDate = function() {
@@ -52,7 +58,33 @@ var timeCheck = function () {
 
 timeCheck();
 
-//hour was clicked
+var loadCalendar = function() {
+  schedule = JSON.parse(localStorage.getItem("schedule"));
+
+  if (!schedule) {
+    schedule = {
+      day: "",
+      hour: "",
+      scheduleNotes: ""
+    };
+  };
+
+  console.log("load", schedule);
+
+  $.each(schedule, function() {
+    if (schedule.day === savedDate) {
+      console.log("yay");
+    }
+    else if (schedule.day != savedDate) {
+      console.log(schedule.day);
+    }
+  });
+
+};
+
+loadCalendar();
+
+//hour row was clicked
 $(".row").on("click", "p", function() {
   var text = $(this)
   .text()
@@ -70,6 +102,22 @@ var text = $(this).val();
 var eventForm = $("<p>")
   .text(text);
 
+var hourId = Number ($(this)
+  .closest(".row")
+  .attr('id'));
+
+var tempSched = {
+  day: savedDate,
+  hour: hourId,
+  scheduleNotes: text
+};
+
 $(this).replaceWith(eventForm);
 timeCheck();
 });
+
+var saveEvent = function(savedDate, hourId, text) {
+
+};
+
+
