@@ -2,7 +2,7 @@
 
 Created a daily planner that will display dates and events
 
-![Workday Planner Screenshot](assets\images\workday_schedule_screenshot.png?raw=true)
+![Workday Planner Screenshot](.assets/images/workday_schedule_planner.png?raw=true)
 
 ## Purpose
 
