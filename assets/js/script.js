@@ -4,11 +4,6 @@ var savedDate = dateDisplay.format("MM/DD/YYYY");
 var hour = Number(dateDisplay.format("H"));
 var schedule = {};
 
-console.log(savedDate);
-console.log(savedDate === "11/26/2021");
-console.log(typeof savedDate);
-console.log(typeof 11/26/2021);
-
 //insert date function
 var insertDate = function() {
   //create day of week and formatted dates
@@ -63,23 +58,28 @@ var loadCalendar = function() {
 
   if (!schedule) {
     schedule = {
-      day: "",
-      hour: "",
-      scheduleNotes: ""
+      daySched: [],
+      hourSched: [],
+      notesSched: []
     };
   };
 
-  console.log("load", schedule);
+  // console.log("load", schedule);
+  // console.log(schedule[4].hourSched);
+  // console.log(schedule[4].notesSched);
 
-  $.each(schedule, function() {
-    if (schedule.day === savedDate) {
-      console.log("yay");
+  for (var i = 0; i < 9; i++) {
+    if (schedule[i].hourSched === Number ($("li").attr('id'))) {
+      var text = schedule[i].notesSched;
+      var existingText = $("li").children("p")
+        .text()
+        .trim();
+      $(existingText).replaceWith(text);
+      console.log(text);
+      console.log("ex", existingText);
+      console.log(schedule[i].notesSched);
     }
-    else if (schedule.day != savedDate) {
-      console.log(schedule.day);
-    }
-  });
-
+  }
 };
 
 loadCalendar();
@@ -97,27 +97,38 @@ $(".row").on("click", "p", function() {
 }); 
 
 $(".row").on("blur", "textarea", function() {
-var text = $(this).val();
+  var text = $(this).val();
 
-var eventForm = $("<p>")
-  .text(text);
+  var eventForm = $("<p>")
+    .text(text);
 
-var hourId = Number ($(this)
-  .closest(".row")
-  .attr('id'));
-
-var tempSched = {
-  day: savedDate,
-  hour: hourId,
-  scheduleNotes: text
-};
-
-$(this).replaceWith(eventForm);
-timeCheck();
+  $(this).replaceWith(eventForm);
+  timeCheck();
+  saveEvent();
 });
 
-var saveEvent = function(savedDate, hourId, text) {
+$("li").on("click", "button", (function() {
+  saveEvent();
+}));
 
+var saveEvent = function() {
+  localStorage.clear();
+
+  var tempSched = [];
+
+  $("li").each(function() {
+    tempSched.push({
+      daySched: savedDate,
+      hourSched: Number ($(this)
+      .closest(".row")
+      .attr('id')),
+      notesSched: $(this)
+      .children('p')
+      .text()
+      .trim()
+    });
+  });
+  localStorage.setItem("schedule", JSON.stringify(tempSched));
 };
 
 
