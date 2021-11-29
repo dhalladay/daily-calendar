@@ -4,6 +4,22 @@ var savedDate = dateDisplay.format("MM/DD/YYYY");
 var hour = Number(dateDisplay.format("H"));
 var schedule = {};
 
+//check for schedule array in localStorage and update variable
+var loadSchedule = function() {
+  schedule = JSON.parse(localStorage.getItem("schedule"));
+
+  if (!schedule) {
+    schedule = {
+      daySched: [],
+      hourSched: [],
+      notesSched: []
+    };
+    return schedule;
+  }
+};
+
+loadSchedule();
+
 //insert date function
 var insertDate = function() {
   //create day of week and formatted dates
@@ -17,16 +33,29 @@ insertDate();
 
 //create lists
 var createLists = function() {
-  //start at 9 so that I can verify time based on list id
-  for(var i = 9; i < 18; i++) {
-    //if statement to convert 24 hour time units to 12 hour with AM and PM
-    if (i < 13) {
-    $('.time-block').append('<li id='+ i +' class="row"><h4 class="hour col-1">' + i + 'AM</h4><p></p><button class="saveBtn col-1"><i class="fas fa-save"></i></button></li>')
-    } else {
-    $('.time-block').append('<li id='+ i +' class="row"><h4 class="hour col-1">' + (i - 12) + 'PM</h4><p></p><button class="saveBtn col-1"><i class="fas fa-save"></i></button></li>')
-    };
+  if (!schedule) {
+    //start at 9 so that I can verify time based on list id
+    for(var i = 9; i < 18; i++) {
+      //if statement to convert 24 hour time units to 12 hour with AM and PM
+      if (i < 13) {
+      $('.time-block').append('<li id='+ i +' class="row"><h4 class="hour col-1">' + i + 'AM</h4><p></p><button class="saveBtn col-1"><i class="fas fa-save"></i></button></li>')
+      } else {
+      $('.time-block').append('<li id='+ i +' class="row"><h4 class="hour col-1">' + (i - 12) + 'PM</h4><p></p><button class="saveBtn col-1"><i class="fas fa-save"></i></button></li>')
+      };
+    }
+  } else {
+    //create lists with schedule notesSched as paragraph text
+    for(var i = 9; i < 18; i++) {
+      //if statement to convert 24 hour time units to 12 hour with AM and PM
+      if (i < 13) {
+      $('.time-block').append('<li id='+ i +' class="row"><h4 class="hour col-1">' + i + 'AM</h4><p>' + schedule[(i-9)].notesSched + '</p><button class="saveBtn col-1"><i class="fas fa-save"></i></button></li>')
+      } else {
+      $('.time-block').append('<li id='+ i +' class="row"><h4 class="hour col-1">' + (i - 12) + 'PM</h4><p>' + schedule[(i-9)].notesSched + '</p><button class="saveBtn col-1"><i class="fas fa-save"></i></button></li>')
+      };
+    }
+
   }
-};
+}
 
 createLists();
 
@@ -53,69 +82,44 @@ var timeCheck = function () {
 
 timeCheck();
 
-var loadCalendar = function() {
-  schedule = JSON.parse(localStorage.getItem("schedule"));
-
-  if (!schedule) {
-    schedule = {
-      daySched: [],
-      hourSched: [],
-      notesSched: []
-    };
-  };
-
-  // console.log("load", schedule);
-  // console.log(schedule[4].hourSched);
-  // console.log(schedule[4].notesSched);
-
-  for (var i = 0; i < 9; i++) {
-    if (schedule[i].hourSched === Number ($("li").attr('id'))) {
-      var text = schedule[i].notesSched;
-      var existingText = $("li").children("p")
-        .text()
-        .trim();
-      $(existingText).replaceWith(text);
-      console.log(text);
-      console.log("ex", existingText);
-      console.log(schedule[i].notesSched);
-    }
-  }
-};
-
-loadCalendar();
-
 //hour row was clicked
 $(".row").on("click", "p", function() {
   var text = $(this)
   .text()
   .trim();
 
+  //replace <p> with <textarea> so events/tasks can be added
   var textInput=$("<textarea>").addClass("schedule-enter col-10").val(text);
   $(this).replaceWith(textInput);
 
   textInput.trigger("focus");
 }); 
 
+//create event listener for leaving textarea
 $(".row").on("blur", "textarea", function() {
   var text = $(this).val();
-
+  //create <p> variable
   var eventForm = $("<p>")
     .text(text);
-
+  //replace <textarea> with <p> and then update hour classes and save into localStorage
   $(this).replaceWith(eventForm);
   timeCheck();
   saveEvent();
 });
 
+//create event listener on save button
 $("li").on("click", "button", (function() {
   saveEvent();
 }));
 
+//create save event variable
 var saveEvent = function() {
+  //clear local storage so that only one schedule array will exist
   localStorage.clear();
 
   var tempSched = [];
 
+  //create variable to as temporary schedule array
   $("li").each(function() {
     tempSched.push({
       daySched: savedDate,
@@ -128,6 +132,7 @@ var saveEvent = function() {
       .trim()
     });
   });
+  //set temporary array as schedule object saved in localStorage
   localStorage.setItem("schedule", JSON.stringify(tempSched));
 };
 
