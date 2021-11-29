@@ -4,11 +4,16 @@ var savedDate = dateDisplay.format("MM/DD/YYYY");
 var hour = Number(dateDisplay.format("H"));
 var schedule = {};
 
+
 //check for schedule array in localStorage and update variable
 var loadSchedule = function() {
   schedule = JSON.parse(localStorage.getItem("schedule"));
+  console.log(schedule[0].daySched === savedDate);
 
   if (!schedule) {
+    schedule = 0;
+    return schedule;
+  } else if (schedule[0].daySched != savedDate) {
     schedule = 0;
     return schedule;
   }
