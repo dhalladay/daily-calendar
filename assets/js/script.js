@@ -9,11 +9,7 @@ var loadSchedule = function() {
   schedule = JSON.parse(localStorage.getItem("schedule"));
 
   if (!schedule) {
-    schedule = {
-      daySched: [],
-      hourSched: [],
-      notesSched: []
-    };
+    schedule = 0;
     return schedule;
   }
 };
@@ -33,14 +29,14 @@ insertDate();
 
 //create lists
 var createLists = function() {
-  if (!schedule) {
+  if (schedule === 0) {
     //start at 9 so that I can verify time based on list id
     for(var i = 9; i < 18; i++) {
       //if statement to convert 24 hour time units to 12 hour with AM and PM
       if (i < 13) {
-      $('.time-block').append('<li id='+ i +' class="row"><h4 class="hour col-1">' + i + 'AM</h4><p></p><button class="saveBtn col-1"><i class="fas fa-save"></i></button></li>')
+      $('.time-block').append('<li id='+ i +' class="row"><h4 class="hour col-sm-2 col-lg-1 pr-1">' + i + 'AM</h4><p></p><button class="saveBtn col-1"><i class="fas fa-save"></i></button></li>')
       } else {
-      $('.time-block').append('<li id='+ i +' class="row"><h4 class="hour col-1">' + (i - 12) + 'PM</h4><p></p><button class="saveBtn col-1"><i class="fas fa-save"></i></button></li>')
+      $('.time-block').append('<li id='+ i +' class="row"><h4 class="hour col-sm-2 col-lg-1 pr-1">' + (i - 12) + 'PM</h4><p></p><button class="saveBtn col-1"><i class="fas fa-save"></i></button></li>')
       };
     }
   } else {
@@ -48,9 +44,9 @@ var createLists = function() {
     for(var i = 9; i < 18; i++) {
       //if statement to convert 24 hour time units to 12 hour with AM and PM
       if (i < 13) {
-      $('.time-block').append('<li id='+ i +' class="row"><h4 class="hour col-1">' + i + 'AM</h4><p>' + schedule[(i-9)].notesSched + '</p><button class="saveBtn col-1"><i class="fas fa-save"></i></button></li>')
+      $('.time-block').append('<li id='+ i +' class="row"><h4 class="hour col-sm-2 col-lg-1 pr-1">' + i + 'AM</h4><p>' + schedule[(i-9)].notesSched + '</p><button class="saveBtn col-1"><i class="fas fa-save"></i></button></li>')
       } else {
-      $('.time-block').append('<li id='+ i +' class="row"><h4 class="hour col-1">' + (i - 12) + 'PM</h4><p>' + schedule[(i-9)].notesSched + '</p><button class="saveBtn col-1"><i class="fas fa-save"></i></button></li>')
+      $('.time-block').append('<li id='+ i +' class="row"><h4 class="hour col-sm-2 col-lg-1 pr-1">' + (i - 12) + 'PM</h4><p>' + schedule[(i-9)].notesSched + '</p><button class="saveBtn col-1"><i class="fas fa-save"></i></button></li>')
       };
     }
 
@@ -67,15 +63,15 @@ var timeCheck = function () {
     var idCheck = Number($(this).attr('id'));
     //if current hour add red background
     if (idCheck === hour) {
-      $(this).children('p').addClass('present col-10');
+      $(this).children('p').addClass('present col-sm-9 col-lg-10');
     }
     //if hour is in the past grey background
     else if (idCheck < hour) {
-      $(this).children('p').addClass('past col-10');
+      $(this).children('p').addClass('past col-sm-9 col-lg-10');
     }
     //if future hour green background
     else {
-      $(this).children('p').addClass('future col-10');
+      $(this).children('p').addClass('future col-sm-9 col-lg-10');
     };
   });
 };
