@@ -8,7 +8,6 @@ var schedule = {};
 //check for schedule array in localStorage and update variable
 var loadSchedule = function() {
   schedule = JSON.parse(localStorage.getItem("schedule"));
-  console.log(schedule[0].daySched === savedDate);
 
   if (!schedule) {
     schedule = 0;
